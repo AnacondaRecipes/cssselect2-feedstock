@@ -1,42 +1,52 @@
 {% set name = "cssselect2" %}
-{% set version = "0.2.1" %}
+{% set version = "0.7.0" %}
 
 package:
-  name: '{{ name|lower }}'
-  version: '{{ version }}'
+  name: {{ name|lower }}
+  version: {{ version }}
 
 source:
+  skip: true    # [py<37]
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 505d2ce3d3a1d390ddb52f7d0864b7efeb115a5b852a91861b498b92424503ab
+  sha256: 1ccd984dab89fc68955043aca4e1b03e0cf29cad9880f6e28e3ba7a74b14aa5a
 
 build:
-  number: 1
-  script: "{{ PYTHON }} -m pip install . -vv"
-  noarch: python
+  number: 0
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
   host:
     - python
     - pip
-    - setuptools
-    - tinycss2
+    - flit-core >=3.2,<4
   run:
     - python
     - tinycss2
+    - webencodings
 
 test:
+  source_files:
+    - tests
   imports:
     - cssselect2
+  requires:
+    - pip
+    - pytest
+  commands:
+    - pip check
+    - pytest -v
 
 about:
-  home: https://github.com/Kozea/cssselect2
+  home: https://doc.courtbouillon.org/cssselect2/
   license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE
-  summary: CSS selectors for Python ElementTree
+  summary: cssselect2 is a straightforward implementation of CSS4 Selectors for markup documents
   description: |
-    cssselect2 is a straightforward implementation of CSS3 Selectors for markup documents.
-  doc_url: http://cssselect2.readthedocs.io
+    cssselect2 is a straightforward implementation of CSS4 Selectors for 
+    markup documents (HTML, XML, etc.) that can be read by ElementTree-like 
+    parsers (including cElementTree, lxml, html5lib, etc.)
+  doc_url: https://doc.courtbouillon.org/cssselect2/
   dev_url: https://github.com/Kozea/cssselect2
 
 extra:
